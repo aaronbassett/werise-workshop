@@ -9,6 +9,11 @@ from tornado import gen
 from watson_developer_cloud import ToneAnalyzerV3
 
 
+class DashboardUIHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("templates/dashboard.html", server_url=os.environ["TORNADO_WS_URL"])
+
+
 class DashboardHandler(tornado.websocket.WebSocketHandler):
 
     connected_clients = set()
@@ -104,6 +109,7 @@ if __name__ == "__main__":
             ),
             (r"/socket", WSHandler),
             (r"/dashboard-socket", DashboardHandler),
+            (r"/dashboard", DashboardUIHandler),
         ]
     )
 
