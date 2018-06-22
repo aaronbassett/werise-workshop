@@ -1,34 +1,28 @@
-import os
-import time
-import uuid
-import jwt
-import requests
+from tinydb import TinyDB, where
+from .recording import download_recording
+from .services import convert_speech_to_text, understand_transcript
 from .celery import app
 
 
 @app.task
-def download_recording(recording_url, recording_uuid):
-    iat = int(time.time())
+def understand_recording(recording_url, recording_uuid):
+    db = TinyDB("db.json")
 
-    with open("private.key", "rb") as key_file:
-        private_key = key_file.read()
+    audio = download_recording(recording_url, recording_uuid)
+    transcription = convert_speech_to_text(audio)
+    analysis = understand_transcript(transcription)
 
-    payload = {
-        "application_id": os.environ["APPLICATION_ID"],
-        "iat": iat,
-        "exp": iat + 60,
-        "jti": str(uuid.uuid4()),
-    }
-
-    token = jwt.encode(payload, private_key, algorithm="RS256")
-
-    recording_response = requests.get(
-        recording_url,
-        headers={"Authorization": b"Bearer " + token, "User-Agent": "voice-journal"},
+    db.update(
+        {
+            "transcription": transcription["results"][0]["alternatives"][0][
+                "transcript"
+            ],
+            "language": analysis["language"],
+            "sentiment": analysis["sentiment"]["document"],
+            "emotions": analysis["emotion"]["document"]["emotion"],
+            "keywords": analysis["keywords"],
+            "concepts": analysis["concepts"],
+            "categories": analysis["categories"],
+        },
+        where("recording_uuid") == recording_uuid,
     )
-    if recording_response.status_code == 200:
-        recordingfile = f"./recordings/{recording_uuid}.mp3"
-        os.makedirs(os.path.dirname(recordingfile), exist_ok=True)
-
-        with open(recordingfile, "wb") as f:
-            f.write(recording_response.content)

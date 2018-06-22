@@ -10,6 +10,8 @@ name = "pypi"
 hug = "*"
 nexmo = "*"
 celery = "*"
+tinydb = "*"
+watson-developer-cloud = "==1.0.2"
 
 
 [dev-packages]

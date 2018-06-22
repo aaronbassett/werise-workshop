@@ -3,3 +3,4 @@
 __pycache__
 private.key
 recordings/
+db.json

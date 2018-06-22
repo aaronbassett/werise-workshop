@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "bfd3213a7d38f3a4ba0d86e6c37bbc7d4a62189c5600abeb01a215e73adbc349"
+            "sha256": "c64f351085dac3f51a2f4a10663332b0d70c175a66b959bf67595f2cee2a6776"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -171,6 +171,26 @@
             ],
             "version": "==1.6.4"
         },
+        "pyopenssl": {
+            "hashes": [
+                "sha256:26ff56a6b5ecaf3a2a59f132681e2a80afcc76b4f902f612f518f92c2a1bf854",
+                "sha256:6488f1423b00f73b7ad5167885312bb0ce410d3312eb212393795b53c8caa580"
+            ],
+            "version": "==18.0.0"
+        },
+        "pysolr": {
+            "hashes": [
+                "sha256:b2c5f920d1cabaff8b465447ee152c6985f120b5895f091cf7bf15ff71ade1dc"
+            ],
+            "version": "==3.7.0"
+        },
+        "python-dateutil": {
+            "hashes": [
+                "sha256:1adb80e7a782c12e52ef9a8182bebeb73f1d7e24e374397af06fb4956c8dc5c0",
+                "sha256:e27001de32f627c22380a688bcc43ce83504a7bc5da472209b4c70f02829f0b8"
+            ],
+            "version": "==2.7.3"
+        },
         "python-mimeparse": {
             "hashes": [
                 "sha256:a295f03ff20341491bfe4717a39cd0a8cc9afad619ba44b77e86b0ab8a2b8282",
@@ -199,6 +219,13 @@
             ],
             "version": "==1.11.0"
         },
+        "tinydb": {
+            "hashes": [
+                "sha256:ac9370ca9f0f93fb868e8a35b62685f4a0f50c0b6a851eacaa72a509ba4eeffc",
+                "sha256:88793016ba94267e3606372e1564d4e797eae855acd5a48352011bfdcf8ee7ad"
+            ],
+            "version": "==3.9.0.post1"
+        },
         "urllib3": {
             "hashes": [
                 "sha256:b5725a0bd4ba422ab0e66e89e030c806576753ea3ee08554382c14e685d117b5",
@@ -212,6 +239,12 @@
                 "sha256:52116d59bc45392af9fdd3b75ed98ae48a93e822cee21e5fda249105c59a7a72"
             ],
             "version": "==1.1.4"
+        },
+        "watson-developer-cloud": {
+            "hashes": [
+                "sha256:673af5474c4d969d126bc4edc1632f7be3d0bf8e4f54c7d2b7a26e30c1728bdf"
+            ],
+            "version": "==1.0.2"
         }
     },
     "develop": {

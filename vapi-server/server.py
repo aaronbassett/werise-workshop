@@ -1,6 +1,7 @@
 import os
 import hug
-from understanding.tasks import download_recording
+from tinydb import TinyDB, where
+from understanding.tasks import understand_recording
 
 
 @hug.get("/ncco", versions=1)
@@ -22,8 +23,25 @@ def events(**kwargs):
 
 
 @hug.post("/recordings", versions=1)
-def recordings(recording_url, recording_uuid):
-    download_recording.delay(recording_url, recording_uuid)
+def recordings(conversation_uuid, recording_url, recording_uuid, start_time, end_time):
+
+    db = TinyDB("db.json")
+
+    entry_meta = {
+        "conversation_uuid": conversation_uuid,
+        "recording_url": recording_url,
+        "recording_uuid": recording_uuid,
+        "start_time": start_time,
+        "end_time": end_time,
+    }
+
+    if db.contains(where("conversation_uuid") == conversation_uuid):
+        db.update(entry_meta, where("conversation_uuid") == conversation_uuid)
+    else:
+        db.insert(entry_meta)
+
+    understand_recording.delay(recording_url, recording_uuid)
+
     return {}
 
 
