@@ -16,8 +16,19 @@ def echo():
         {
             "action": "record",
             "eventUrl": [f"{os.environ['VAPI_SERVER_URL']}/v1/recordings"],
-            "endOnKey": "*",
-            "beepStart": True,
+        },
+        {
+            "action": "connect",
+            "eventUrl": [f"{os.environ['VAPI_SERVER_URL']}/v1/events"],
+            "from": os.environ["NEXMO_VIRTUAL_NUMBER"],
+            "endpoint": [
+                {
+                    "type": "websocket",
+                    "uri": f"{os.environ['TORNADO_SERVER_URL']}/socket",
+                    "content-type": "audio/l16;rate=16000",
+                    "headers": {},
+                }
+            ],
         },
     ]
 
