@@ -9,6 +9,7 @@ name = "pypi"
 
 hug = "*"
 nexmo = "*"
+celery = "*"
 
 
 [dev-packages]
