@@ -8,6 +8,7 @@ name = "pypi"
 [packages]
 
 hug = "*"
+nexmo = "*"
 
 
 [dev-packages]
