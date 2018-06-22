@@ -19,6 +19,11 @@ def echo():
     ]
 
 
+@hug.post("/events", versions=1)
+def events(**kwargs):
+    return kwargs
+
+
 @hug.post("/recordings", versions=1)
 def recordings(recording_url, recording_uuid):
     iat = int(time.time())
