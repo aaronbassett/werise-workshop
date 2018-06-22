@@ -7,7 +7,12 @@ from understanding.tasks import understand_recording
 @hug.get("/ncco", versions=1)
 def echo():
     return [
-        {"action": "talk", "text": "Record your message after the beep"},
+        {
+            "action": "stream",
+            "streamUrl": [
+                f"{os.environ['TORNADO_SERVER_URL']}/static/British-calls-recorded.mp3"
+            ],
+        },
         {
             "action": "record",
             "eventUrl": [f"{os.environ['VAPI_SERVER_URL']}/v1/recordings"],
