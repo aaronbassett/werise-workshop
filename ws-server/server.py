@@ -9,6 +9,25 @@ from tornado import gen
 from watson_developer_cloud import ToneAnalyzerV3
 
 
+class DashboardHandler(tornado.websocket.WebSocketHandler):
+
+    connected_clients = set()
+
+    def check_origin(self, origin):
+        return True
+
+    def open(self):
+        DashboardHandler.connected_clients.add(self)
+
+    def on_close(self):
+        DashboardHandler.connected_clients.remove(self)
+
+    @classmethod
+    def send_updates(cls, tones):
+        for connected_client in cls.connected_clients:
+            connected_client.write_message(tones)
+
+
 class WSHandler(tornado.websocket.WebSocketHandler):
 
     connections = []
@@ -59,7 +78,8 @@ class WSHandler(tornado.websocket.WebSocketHandler):
                     tone_input=transcript, content_type="text/plain"
                 )
                 tones = tone_results["document_tone"]["tone_categories"][0]["tones"]
-                print(tones)
+
+                DashboardHandler.send_updates(json.dumps(tones))
 
     def open(self):
         self.connections.append(self)
@@ -83,6 +103,7 @@ if __name__ == "__main__":
                 {"path": "ws-server/static"},
             ),
             (r"/socket", WSHandler),
+            (r"/dashboard-socket", DashboardHandler),
         ]
     )
 
