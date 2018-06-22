@@ -6,6 +6,7 @@ import tornado.websocket
 import tornado.ioloop
 import tornado.web
 from tornado import gen
+from watson_developer_cloud import ToneAnalyzerV3
 
 
 class WSHandler(tornado.websocket.WebSocketHandler):
@@ -16,6 +17,12 @@ class WSHandler(tornado.websocket.WebSocketHandler):
         self.transcriber = tornado.websocket.websocket_connect(
             f"wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize?watson-token={self.transcriber_token}&model=en-UK_NarrowbandModel",
             on_message_callback=self.on_transcriber_message,
+        )
+
+        self.tone_analyzer = ToneAnalyzerV3(
+            username=os.environ["WATSON_TONE_ANALYZER_USERNAME"],
+            password=os.environ["WATSON_TONE_ANALYZER_PASSWORD"],
+            version="2016-05-19",
         )
 
     @property
@@ -44,7 +51,15 @@ class WSHandler(tornado.websocket.WebSocketHandler):
             transcriber.write_message(json.dumps(data), binary=False)
 
     def on_transcriber_message(self, message):
-        print(message)
+        if message:
+            message = json.loads(message)
+            if "results" in message:
+                transcript = message["results"][0]["alternatives"][0]["transcript"]
+                tone_results = self.tone_analyzer.tone(
+                    tone_input=transcript, content_type="text/plain"
+                )
+                tones = tone_results["document_tone"]["tone_categories"][0]["tones"]
+                print(tones)
 
     def open(self):
         self.connections.append(self)
